@@ -9,7 +9,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"github.com/the-Jinxist/golang_snake_game/ui"
+	"github.com/the-Jinxist/golang_snake_game/tui"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 	Short: "The best terminal snake game written in Go",
 	Long:  `Run the super_snake command to start playing the classic snake game in your terminal!`,
 	Run: func(cmd *cobra.Command, args []string) {
-		p := tea.NewProgram(ui.InitalModel())
+		p := tea.NewProgram(tui.NewModel())
 		if _, err := p.Run(); err != nil {
 			log.Fatal(err)
 		}

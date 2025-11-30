@@ -1,0 +1,123 @@
+package menu
+
+import (
+	"fmt"
+
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+)
+
+const (
+	combinedTitle = `
+███████╗██╗   ██╗██████╗ ███████╗██████╗  ███████╗███╗   ██╗ █████╗ ██╗  ██╗███████╗
+██╔════╝██║   ██║██╔══██╗██╔════╝██╔══██╗ ██╔════╝████╗  ██║██╔══██╗██║ ██╔╝██╔════╝
+███████╗██║   ██║██████╔╝█████╗  ██████╔╝ ███████╗██╔██╗ ██║███████║█████═╝ █████╗  
+╚════██║██║   ██║██╔═══╝ ██╔══╝  ██╔══██╗ ╚════██║██║╚██╗██║██╔══██║██╔═██╗ ╚════╝  
+███████║╚██████╔╝██║     ███████╗██║  ██║ ███████║██║ ╚████║██║  ██║██║  ██╗███████╗
+╚══════╝ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═╝ ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+`
+)
+
+// const (
+// 	block   = " "
+// 	rows    = 30
+// 	columns = 20
+// )
+
+type StartGameModel struct {
+	choices []string // items on the to-do list
+	cursor  int
+}
+
+func InitalModel() StartGameModel {
+	return StartGameModel{
+		choices: []string{"Start Game", "Exit"},
+
+		cursor: 0,
+	}
+}
+
+func (m StartGameModel) Init() tea.Cmd {
+	return nil
+}
+
+func (m StartGameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c", "q":
+
+			return m, tea.Quit
+		case "A", "w":
+			nextCursor := m.cursor - 1
+			if nextCursor < 0 {
+				nextCursor = 0
+			}
+
+			m.cursor = nextCursor
+		case "B", "s":
+			nextCursor := m.cursor + 1
+			if nextCursor > 1 {
+				nextCursor = 1
+			}
+
+			m.cursor = nextCursor
+		case "enter", " ":
+
+			//TODO: Send out command
+
+		}
+
+	}
+	return m, nil
+}
+
+func (m StartGameModel) View() string {
+	var style = lipgloss.NewStyle().
+		Bold(true).
+		Align(lipgloss.Left).
+		Width(30).
+		Height(5)
+
+	title := combinedTitle
+	options := fmt.Sprint(
+		"\n",
+	)
+
+	for index, value := range m.choices {
+
+		prefix := ""
+		if index == m.cursor {
+			prefix = "> "
+		}
+
+		options += style.Render(fmt.Sprintf("\n%s%s", prefix, value))
+	}
+	return title + options
+}
+
+func (m StartGameModel) landingTerminalPage() string {
+	var style = lipgloss.NewStyle().
+		Bold(true).
+		Align(lipgloss.Left).
+		Padding(5).
+		Width(30).
+		Height(5)
+
+	title := combinedTitle
+	options := fmt.Sprint(
+		"\n",
+	)
+
+	for index, value := range m.choices {
+
+		prefix := ""
+		if index == m.cursor {
+			prefix = "> "
+		}
+
+		options += style.Render(fmt.Sprintf("%s%s", prefix, value))
+	}
+	return title + options
+}
