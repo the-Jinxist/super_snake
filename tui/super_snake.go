@@ -2,6 +2,7 @@ package tui
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/the-Jinxist/golang_snake_game/tui/game"
 	"github.com/the-Jinxist/golang_snake_game/tui/menu"
 	"github.com/the-Jinxist/golang_snake_game/tui/views"
 )
@@ -19,7 +20,13 @@ func NewModel() *SuperSnake {
 	}
 }
 
-func (s *SuperSnake) setChild(views.Mode) {
+func (s *SuperSnake) setChild(mode views.Mode) {
+	switch mode {
+	case views.ModeGame:
+		s.child = game.GameModel{}
+		return
+	}
+
 	s.child = menu.InitalModel()
 }
 
@@ -38,6 +45,8 @@ func (s *SuperSnake) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			return s, tea.Quit
 		}
+	case views.SwitchModeMsg:
+		s.setChild(msg.Target)
 	}
 
 	var cmd tea.Cmd

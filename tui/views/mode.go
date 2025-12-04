@@ -1,5 +1,9 @@
 package views
 
+import (
+	tea "github.com/charmbracelet/bubbletea"
+)
+
 type Mode int
 
 const (
@@ -7,3 +11,23 @@ const (
 	ModeGame
 	ModeLeaderboard
 )
+
+type SwitchModeMsg struct {
+	Target Mode
+}
+
+type ExitGameMsg struct{}
+
+func SwitchModeCmd(target Mode) tea.Cmd {
+	return func() tea.Msg {
+		return SwitchModeMsg{
+			Target: target,
+		}
+	}
+}
+
+func ExitGameCmd() tea.Cmd {
+	return func() tea.Msg {
+		return ExitGameMsg{}
+	}
+}

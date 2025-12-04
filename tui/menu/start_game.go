@@ -5,6 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/the-Jinxist/golang_snake_game/tui/views"
 )
 
 const (
@@ -23,6 +24,8 @@ const (
 // 	rows    = 30
 // 	columns = 20
 // )
+
+var _ tea.Model = StartGameModel{}
 
 type StartGameModel struct {
 	choices []string // items on the to-do list
@@ -65,8 +68,11 @@ func (m StartGameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.cursor = nextCursor
 		case "enter", " ":
 
-			//TODO: Send out command
+			if m.cursor == 1 {
+				return m, tea.Quit
+			}
 
+			return m, tea.Batch(views.SwitchModeCmd(views.ModeGame))
 		}
 
 	}
@@ -93,31 +99,6 @@ func (m StartGameModel) View() string {
 		}
 
 		options += style.Render(fmt.Sprintf("\n%s%s", prefix, value))
-	}
-	return title + options
-}
-
-func (m StartGameModel) landingTerminalPage() string {
-	var style = lipgloss.NewStyle().
-		Bold(true).
-		Align(lipgloss.Left).
-		Padding(5).
-		Width(30).
-		Height(5)
-
-	title := combinedTitle
-	options := fmt.Sprint(
-		"\n",
-	)
-
-	for index, value := range m.choices {
-
-		prefix := ""
-		if index == m.cursor {
-			prefix = "> "
-		}
-
-		options += style.Render(fmt.Sprintf("%s%s", prefix, value))
 	}
 	return title + options
 }
