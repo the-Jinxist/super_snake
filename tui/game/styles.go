@@ -1,0 +1,8 @@
+package game
+
+const (
+	EmptyCell  = "░░"
+	FilledCell = "██"
+
+	FoodColor = "#DC3A35"
+)

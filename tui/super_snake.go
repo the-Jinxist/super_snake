@@ -23,7 +23,7 @@ func NewModel() *SuperSnake {
 func (s *SuperSnake) setChild(mode views.Mode) {
 	switch mode {
 	case views.ModeGame:
-		s.child = game.GameModel{}
+		s.child = game.InitalGameModel()
 		return
 	}
 
