@@ -35,18 +35,15 @@ type GameModel struct {
 	Direction Direction
 }
 
-func InitalGameModel() *GameModel {
-
-	rows := 50
-	column := 30
+func InitalGameModel(game GameStartConfig) *GameModel {
 
 	gameMod := &GameModel{
-		Rows:    rows,
-		Columns: column,
+		Rows:    game.Rows,
+		Columns: game.Columns,
 		Snake: []Position{
 			{
-				X: rows / 2,
-				Y: column / 2,
+				X: game.Rows / 2,
+				Y: game.Columns / 2,
 			},
 		},
 		Direction: Right,

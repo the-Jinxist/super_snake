@@ -25,7 +25,7 @@ func NewModel() *SuperSnake {
 func (s *SuperSnake) setChild(mode views.Mode) {
 	switch mode {
 	case views.ModeGame:
-		s.child = game.InitalGameModel()
+		s.child = game.InitalGameModel(game.DefaultGameConfig())
 		return
 	}
 
