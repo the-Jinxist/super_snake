@@ -1,8 +1,6 @@
 package tui
 
 import (
-	"fmt"
-
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/the-Jinxist/golang_snake_game/tui/game"
 	"github.com/the-Jinxist/golang_snake_game/tui/menu"
@@ -40,7 +38,6 @@ func (s *SuperSnake) Init() tea.Cmd {
 // and, in response, update the model and/or send a command.
 func (s *SuperSnake) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	fmt.Printf("msg: %s", msg)
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {

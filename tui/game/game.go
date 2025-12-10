@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/Broderick-Westrope/charmutils"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/the-Jinxist/golang_snake_game/utils"
@@ -31,8 +32,11 @@ type GameModel struct {
 	Columns int
 	Snake   []Position
 
-	Food      Position
-	Direction Direction
+	Food       Position
+	Direction  Direction
+	Score      int
+	IsGameOver bool
+	isPaused   bool
 }
 
 func InitalGameModel(game GameStartConfig) *GameModel {
@@ -47,6 +51,7 @@ func InitalGameModel(game GameStartConfig) *GameModel {
 			},
 		},
 		Direction: Right,
+		Score:     0,
 	}
 
 	return gameMod
@@ -85,7 +90,7 @@ func (g *GameModel) directionToPosition(direction Direction) Position {
 	return position
 }
 
-func (g *GameModel) isWall(x int, y int) bool {
+func (g *GameModel) isOutOfBounds(x int, y int) bool {
 	return x > g.Rows || y > g.Columns || x < 0 || y < 0
 }
 
@@ -116,6 +121,14 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		input := msg.String()
+		if utils.KeyMatchesInput(input, utils.Space) {
+			g.isPaused = !g.isPaused
+		}
+
+		if g.isPaused {
+			return g, nil
+		}
+
 		if utils.KeyMatchesInput(input, utils.KeyUp) {
 			g.Direction = Up
 		}
@@ -132,14 +145,14 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			g.Direction = Left
 		}
 
-		if utils.KeyMatchesInput(input, utils.Space) {
-			fmt.Println("Paused")
-		}
-
 		return g, nil
 
 	case Tick:
-		g.moveSnake()
+
+		if !g.isPaused {
+			g.moveSnake()
+		}
+
 		return g, tea.Batch(g.Tick())
 	default:
 		return g, tea.Batch(g.Tick())
@@ -149,10 +162,9 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (g *GameModel) Tick() tea.Cmd {
-	return tea.Tick(time.Second/2, func(t time.Time) tea.Msg {
+	return tea.Tick(time.Second/4, func(t time.Time) tea.Msg {
 		return Tick{}
 	})
-
 }
 
 func (g *GameModel) moveSnake() {
@@ -161,12 +173,22 @@ func (g *GameModel) moveSnake() {
 
 	currentSnakeHead := g.Snake[0]
 
-	if g.isWall(currentSnakeHead.X, currentSnakeHead.Y) {
-		fmt.Println("Game over")
+	//If snake is out of bounds
+	if g.isOutOfBounds(currentSnakeHead.X, currentSnakeHead.Y) {
+		g.IsGameOver = true
 	}
 
 	movingToX := currentSnakeHead.X + pos.X
 	movingToY := currentSnakeHead.Y + pos.Y
+
+	// If snakes eats itself
+	if g.isSnake(movingToX, movingToY) {
+		g.IsGameOver = true
+	}
+
+	if g.IsGameOver {
+		return
+	}
 
 	if g.isFood(currentSnakeHead.X, currentSnakeHead.Y) {
 		g.instantiateFood()
@@ -174,6 +196,8 @@ func (g *GameModel) moveSnake() {
 			X: movingToX,
 			Y: movingToY,
 		}
+
+		g.Score += 10
 
 		g.Snake = append([]Position{newSnakeHead}, g.Snake...)
 
@@ -208,6 +232,28 @@ func (g *GameModel) View() string {
 		output += "\n"
 	}
 
-	output = lipgloss.NewStyle().Margin(5).Border(lipgloss.DoubleBorder(), true).Render(output)
+	output = lipgloss.NewStyle().Border(lipgloss.ASCIIBorder(), true).Render(output)
+
+	output += "\n"
+
+	if g.isPaused {
+		output += lipgloss.NewStyle().
+			AlignHorizontal(lipgloss.Center).
+			Render(fmt.Sprintf("[ PAUSED ]. Your score: %d. Press SPACE to resume!", g.Score))
+	} else {
+		output += lipgloss.NewStyle().
+			AlignHorizontal(lipgloss.Center).
+			Render(fmt.Sprintf("Your score: %d. Press SPACE to pause!", g.Score))
+	}
+
+	if g.IsGameOver {
+		gameOverMessage := GameOver
+		gameOverMessage += "\n"
+		gameOverMessage += lipgloss.NewStyle().
+			AlignHorizontal(lipgloss.Center).
+			Render("Press EXIT or HOLD to continue")
+		output, _ = charmutils.OverlayCenter(output, gameOverMessage, false)
+	}
+
 	return output
 }

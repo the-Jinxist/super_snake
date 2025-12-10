@@ -10,6 +10,7 @@ const (
 	ModeMenu = Mode(iota)
 	ModeGame
 	ModeLeaderboard
+	ModeGameOver
 )
 
 type SwitchModeMsg struct {
