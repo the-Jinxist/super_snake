@@ -40,7 +40,6 @@ type GameModel struct {
 }
 
 func InitalGameModel(game GameStartConfig) *GameModel {
-
 	gameMod := &GameModel{
 		Rows:    game.Rows,
 		Columns: game.Columns,
