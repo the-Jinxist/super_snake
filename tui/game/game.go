@@ -27,12 +27,17 @@ const (
 	Right
 )
 
+type Food struct {
+	Position
+	BigFish bool
+}
+
 type GameModel struct {
 	Rows    int
 	Columns int
 	Snake   []Position
 
-	Food       Position
+	Food       Food
 	Direction  Direction
 	Score      int
 	IsGameOver bool
@@ -109,9 +114,11 @@ func (g *GameModel) instantiateFood() {
 		randomY = rand.Intn(g.Columns)
 	}
 
-	g.Food = Position{
-		X: randomX,
-		Y: randomY,
+	g.Food = Food{
+		Position: Position{
+			X: randomX,
+			Y: randomY,
+		},
 	}
 }
 
@@ -129,19 +136,27 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		if utils.KeyMatchesInput(input, utils.KeyUp) {
-			g.Direction = Up
+			if g.Direction == Left || g.Direction == Right {
+				g.Direction = Up
+			}
 		}
 
 		if utils.KeyMatchesInput(input, utils.KeyRight) {
-			g.Direction = Right
+			if g.Direction == Up || g.Direction == Down {
+				g.Direction = Right
+			}
 		}
 
 		if utils.KeyMatchesInput(input, utils.KeyDown) {
-			g.Direction = Down
+			if g.Direction == Left || g.Direction == Right {
+				g.Direction = Down
+			}
 		}
 
 		if utils.KeyMatchesInput(input, utils.KeyLeft) {
-			g.Direction = Left
+			if g.Direction == Up || g.Direction == Down {
+				g.Direction = Left
+			}
 		}
 
 		return g, nil
