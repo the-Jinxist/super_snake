@@ -16,11 +16,6 @@ type GameStartConfig struct {
 	SessionManager internal.SessionManager
 }
 
-type LeaderboardConfig struct {
-	ScoreService   internal.ScoreService
-	SessionManager internal.SessionManager
-}
-
 func TickGame() tea.Cmd {
 	return func() tea.Msg {
 		return Tick{}

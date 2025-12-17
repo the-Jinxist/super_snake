@@ -3,6 +3,7 @@ package tui
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/the-Jinxist/golang_snake_game/tui/game"
+	"github.com/the-Jinxist/golang_snake_game/tui/leaderboard"
 	"github.com/the-Jinxist/golang_snake_game/tui/menu"
 	"github.com/the-Jinxist/golang_snake_game/tui/views"
 )
@@ -25,6 +26,10 @@ func (s *SuperSnake) setChild(mode views.Mode) {
 	case views.ModeGame:
 		s.child = game.InitalGameModel(game.DefaultGameConfig())
 		return
+	case views.ModeLeaderboard:
+		s.child = leaderboard.NewLeaderboardModel(
+			leaderboard.DefaultLeaderboardConfig(),
+		)
 	}
 
 	s.child = menu.InitalModel()
