@@ -8,14 +8,17 @@ var (
 	KeyRight Key = []string{"C", "d", "right"}
 	KeyLeft  Key = []string{"D", "a", "left"}
 	Enter    Key = []string{"enter"}
+	Esc      Key = []string{"esc"}
 	Space    Key = []string{" "}
 )
 
-func KeyMatchesInput(input string, key Key) bool {
+func KeyMatchesInput(input string, keys ...Key) bool {
 	matches := false
-	for _, v := range key {
-		if v == input {
-			return true
+	for _, key := range keys {
+		for _, v := range key {
+			if v == input {
+				return true
+			}
 		}
 	}
 

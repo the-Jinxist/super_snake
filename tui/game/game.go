@@ -9,6 +9,7 @@ import (
 	"github.com/Broderick-Westrope/charmutils"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/the-Jinxist/golang_snake_game/tui/views"
 	"github.com/the-Jinxist/golang_snake_game/utils"
 )
 
@@ -135,6 +136,16 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		input := msg.String()
+
+		if g.IsGameOver {
+			g.Config.SessionManager.DestroyCurrentSession()
+			if utils.KeyMatchesInput(input, utils.Esc, utils.Space) {
+				return g, tea.Batch(views.ClearScreen(), views.SwitchModeCmd(views.ModeMenu))
+			}
+
+			return g, nil
+		}
+
 		if utils.KeyMatchesInput(input, utils.Space) {
 			g.isPaused = !g.isPaused
 		}
@@ -171,7 +182,7 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case Tick:
 
-		if !g.isPaused {
+		if !g.isPaused && !g.IsGameOver {
 			g.moveSnake()
 		}
 
@@ -194,13 +205,13 @@ func (g *GameModel) moveSnake() {
 
 	currentSnakeHead := g.Snake[0]
 
-	//If snake is out of bounds
-	if g.hasHitWall(currentSnakeHead.X, currentSnakeHead.Y) {
-		g.IsGameOver = true
-	}
-
 	movingToX := currentSnakeHead.X + pos.X
 	movingToY := currentSnakeHead.Y + pos.Y
+
+	//If snake is out of bounds
+	if g.hasHitWall(movingToX, movingToY) {
+		g.IsGameOver = true
+	}
 
 	// If snakes eats itself
 	if g.isSnake(movingToX, movingToY) {
@@ -303,7 +314,7 @@ func (g *GameModel) View() string {
 		gameOverMessage += "\n"
 		gameOverMessage += lipgloss.NewStyle().
 			AlignHorizontal(lipgloss.Center).
-			Render("Press EXIT or HOLD to continue")
+			Render(fmt.Sprintf("Your final score is %d\nPress SPACE to go back to menu", g.Score))
 		output, _ = charmutils.OverlayCenter(output, gameOverMessage, false)
 	}
 

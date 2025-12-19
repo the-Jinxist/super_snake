@@ -27,7 +27,7 @@ func DefaultGameConfig() GameStartConfig {
 		Rows:           30,
 		Columns:        25,
 		Scoring:        10,
-		IsWalled:       false,
+		IsWalled:       true,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}
