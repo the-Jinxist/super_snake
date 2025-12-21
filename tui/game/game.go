@@ -189,6 +189,11 @@ func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		if g.isPaused {
+
+			if utils.KeyMatchesInput(input, utils.Esc) {
+				return g, tea.Batch(views.SwitchModeCmd(views.ModeMenu))
+			}
+
 			return g, nil
 		}
 
@@ -388,7 +393,7 @@ func (g *GameModel) View() string {
 	if g.isPaused {
 		output += lipgloss.NewStyle().
 			AlignHorizontal(lipgloss.Center).
-			Render(fmt.Sprintf("[ PAUSED ]. Your score: %d/%d. Press SPACE to resume!", g.Score, g.Config.ScoreThreshold))
+			Render(fmt.Sprintf("[ PAUSED ]. Your score: %d/%d. Press SPACE to resume! Press ESC to back to menu", g.Score, g.Config.ScoreThreshold))
 	} else {
 		output += lipgloss.NewStyle().
 			AlignHorizontal(lipgloss.Center).
@@ -421,5 +426,10 @@ func (g *GameModel) View() string {
 		Render(fmt.Sprintf("Level %d", g.Config.Level))
 	levelIndicator += "\n"
 
-	return levelIndicator + output
+	help := "\n\n[INSTRUCTIONS]:\n · -> or D to move right\n · <- or A to move left\n · ↑ or W to move up\n · ↓ or S to move down"
+	help = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#444745")).
+		Render(help)
+
+	return levelIndicator + output + help
 }
