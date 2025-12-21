@@ -128,7 +128,6 @@ func (s *ScoreServiceImpol) GetCurrentScore(ctx context.Context) (int, error) {
 // SetScore implements ScoreService.
 func (s *ScoreServiceImpol) SetCurrentScore(ctx context.Context, value int) error {
 
-	fmt.Printf("setting score: %d", value)
 	session, _ := s.Session.GetCurrentSession()
 	_, err := s.db.ExecContext(ctx,
 		`insert into scores ("user", session, value) 

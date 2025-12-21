@@ -86,6 +86,12 @@ func (g *GameModel) isSnake(x int, y int) bool {
 	return isSnake
 }
 
+func (g *GameModel) isSnakeHead(x int, y int) bool {
+	snakeHead := g.Snake[0]
+
+	return x == snakeHead.X && y == snakeHead.Y
+}
+
 func (g *GameModel) isFood(x int, y int) bool {
 	food := g.Food
 	return x == food.X && y == food.Y
@@ -112,6 +118,16 @@ func (g *GameModel) hasHitWall(x int, y int) bool {
 	return g.isOutOfBounds(x, y) && g.Config.IsWalled
 }
 
+func (g *GameModel) isPillar(x, y int) bool {
+	for _, pos := range g.Config.Pillars {
+		if x == pos.X && y == pos.Y {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (g *GameModel) isOutOfBounds(x int, y int) bool {
 	return x > g.Config.Rows-1 || y > g.Config.Columns-1 || x < 0 || y < 0
 }
@@ -131,7 +147,7 @@ func (g *GameModel) instantiateFood() {
 	randomX := rand.Intn(rows)
 	randomY := rand.Intn(columns)
 
-	for g.isSnake(randomX, randomY) {
+	for g.isSnake(randomX, randomY) || g.isPillar(randomX, randomY) || g.hasHitWall(randomX, randomY) {
 		randomX = rand.Intn(rows)
 		randomY = rand.Intn(columns)
 	}
@@ -221,11 +237,14 @@ func (g *GameModel) Tick() tea.Cmd {
 	if g.hasReachedLevelThreshold() {
 
 		if g.Config.Level == 5 {
+			fmt.Print("\033[H\033[2J")
 			return tea.Batch(views.SwitchModeCmd(views.ModeGameCompleted))
 		}
 
 		time.Sleep(2 * time.Second)
 		nextLevel := views.NextLevelModeFromCurrent(g.Config.Level)
+
+		fmt.Print("\033[H\033[2J")
 		return tea.Batch(views.SwitchModeCmd(nextLevel))
 	}
 
@@ -244,6 +263,10 @@ func (g *GameModel) moveSnake() {
 
 	//If snake is out of bounds
 	if g.hasHitWall(movingToX, movingToY) {
+		g.IsGameOver = true
+	}
+
+	if g.isPillar(movingToX, movingToY) {
 		g.IsGameOver = true
 	}
 
@@ -318,9 +341,16 @@ func (g *GameModel) View() string {
 		for j := range g.Config.Rows {
 
 			if g.isSnake(j, i) {
-				output += cellStyle.Render(FilledCell)
+				if g.isSnakeHead(j, i) {
+					output += SnakeHeadFromDirection(g.Direction)
+				} else {
+					output += cellStyle.Render(FilledCell)
+				}
+
 			} else if g.isFood(j, i) {
-				output += cellStyle.Foreground(lipgloss.Color("205")).Render(FilledCell)
+				output += FoodCell
+			} else if g.isPillar(j, i) {
+				output += PillarCell
 			} else {
 				output += cellStyle.Render(EmptyCell)
 			}
@@ -343,15 +373,15 @@ func (g *GameModel) View() string {
 			Render(fmt.Sprintf("Your score: %d/%d. Press SPACE to pause!", g.Score, g.Config.ScoreThreshold))
 	}
 
-	// if g.hasReachedLevelThreshold() {
-	// 	levelingUpMsg := "We're going up!"
-	// 	levelingUpMsg += "/n"
-	// 	levelingUpMsg += lipgloss.NewStyle().
-	// 		AlignHorizontal(lipgloss.Center).
-	// 		Render(g.spinner.View())
-	// 	output, _ = charmutils.OverlayCenter(output, levelingUpMsg, false)
+	if g.hasReachedLevelThreshold() {
+		levelingUpMsg := "We're going up!"
+		levelingUpMsg += "/n"
+		levelingUpMsg += lipgloss.NewStyle().
+			AlignHorizontal(lipgloss.Center).
+			Render(g.spinner.View())
+		output, _ = charmutils.OverlayCenter(output, levelingUpMsg, false)
 
-	// }
+	}
 
 	if g.IsGameOver {
 		gameOverMessage := gameOverMsg

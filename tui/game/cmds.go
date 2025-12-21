@@ -33,7 +33,7 @@ func DefaultGameConfig() GameStartConfig {
 		Columns:        25,
 		Scoring:        10,
 		IsWalled:       true,
-		ScoreThreshold: 20,
+		ScoreThreshold: 200,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}
@@ -43,7 +43,9 @@ func Level1GameConfig() GameStartConfig {
 	return GameStartConfig{
 		Rows:           35,
 		Columns:        25,
-		ScoreThreshold: 500,
+		ScoreThreshold: 700,
+		Scoring:        10,
+		Pillars:        level1Pillars,
 		Level:          1,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
@@ -54,7 +56,9 @@ func Level2GameConfig() GameStartConfig {
 	return GameStartConfig{
 		Rows:           40,
 		Columns:        30,
-		ScoreThreshold: 1000,
+		IsWalled:       true,
+		ScoreThreshold: 1900,
+		Scoring:        10,
 		Level:          2,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
@@ -65,7 +69,8 @@ func Level3GameConfig() GameStartConfig {
 	return GameStartConfig{
 		Rows:           45,
 		Columns:        35,
-		ScoreThreshold: 1500,
+		ScoreThreshold: 3500,
+		Scoring:        10,
 		Level:          3,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
@@ -76,7 +81,9 @@ func Level4GameConfig() GameStartConfig {
 	return GameStartConfig{
 		Rows:           50,
 		Columns:        40,
-		ScoreThreshold: 2500,
+		ScoreThreshold: 5500,
+		IsWalled:       true,
+		Scoring:        10,
 		Level:          4,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
@@ -87,7 +94,9 @@ func Level5GameConfig() GameStartConfig {
 	return GameStartConfig{
 		Rows:           60,
 		Columns:        40,
-		ScoreThreshold: 5000,
+		ScoreThreshold: 8000,
+		Scoring:        10,
+		IsWalled:       true,
 		Level:          5,
 		IsFinalLevel:   true,
 		ScoreService:   internal.GetScoreService(),

@@ -3,9 +3,32 @@ package game
 const (
 	EmptyCell  = "░░"
 	FilledCell = "██"
+	FoodCell   = "🍎"
+
+	SnakeHeadUp    = "◓◓"
+	SnakeHeadDown  = "◒◒"
+	SnakeHeadLeft  = "◐◐"
+	SnakeHeadRight = "◑◑"
+
+	PillarCell = "※※"
 
 	FoodColor = "#DC3A35"
 )
+
+func SnakeHeadFromDirection(direction Direction) string {
+	switch direction {
+	case Up:
+		return SnakeHeadUp
+	case Down:
+		return SnakeHeadDown
+	case Left:
+		return SnakeHeadLeft
+	case Right:
+		return SnakeHeadRight
+	default:
+		return SnakeHeadRight
+	}
+}
 
 const (
 	gameOverMsg = `
