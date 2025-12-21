@@ -1,0 +1,101 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 1
+
+env:
+    - GO111MODULE=on
+    - CGO_ENABLED=1
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=1
+      - GO111MODULE=on
+      - CC=o64-clang
+      - CXX=o64-clang++
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64  
+
+archives:
+  - format: tar.gz
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: '{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}'
+    replacements:
+        amd64: 64bit
+        386: 32bit
+        arm: ARM
+        arm64: ARM64
+        darwin: macOS
+        linux: Linux
+        windows: Windows
+        openbsd: OpenBSD
+        netbsd: NetBSD
+        freebsd: FreeBSD
+        dragonfly: DragonFlyBSD
+    files:
+        - Readme.MD
+        - LICENSE
+checksum:
+    name_template: 'checksums.txt'
+snapshot:
+    name_template: '{{ .Tag }}-next'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - 'README'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - 
+    name: super_snake
+    # folder: Formula
+    description: "Play Snake Xenzia in your terminal"
+    homepage: "https://github.com/the-Jinxist/golang_snake_game"
+    skip_upload: false
+    post_install: |
+        golang_snake_game --help
+    # tap:
+    #   owner: the-Jinxist
+    #   name: brew-genie
+    commit_author:
+      name: Favour
+      email: nerosilva522@gmail.com
+    repository:
+      owner: the-Jinxist
+      name: brew-super-snake
+      branch: main
+      token: "{{ .Env.GITHUB_TOKEN }}"
+      git:
+        private_key: '{{ .Env.PRIVATE_KEY_PATH }}'
