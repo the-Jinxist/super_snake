@@ -1,7 +1,19 @@
 package game
 
 var level1Pillars = []Position{
-	//Middle bar
+	//Middle bar - Horizontal
+	{
+		X: 7,
+		Y: 10,
+	},
+	{
+		X: 8,
+		Y: 10,
+	},
+	{
+		X: 9,
+		Y: 10,
+	},
 	{
 		X: 10,
 		Y: 10,
@@ -37,6 +49,34 @@ var level1Pillars = []Position{
 	},
 	{
 		X: 20,
+		Y: 10,
+	},
+	{
+		X: 21,
+		Y: 10,
+	},
+	{
+		X: 22,
+		Y: 10,
+	},
+	{
+		X: 23,
+		Y: 10,
+	},
+	{
+		X: 24,
+		Y: 10,
+	},
+	{
+		X: 25,
+		Y: 10,
+	},
+	{
+		X: 26,
+		Y: 10,
+	},
+	{
+		X: 27,
 		Y: 10,
 	},
 	//Left bar

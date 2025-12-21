@@ -1,6 +1,8 @@
 package game
 
 import (
+	"time"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/the-Jinxist/golang_snake_game/internal"
 )
@@ -17,6 +19,8 @@ type GameStartConfig struct {
 	IsFinalLevel   bool
 	ScoreThreshold int
 	Scoring        int
+	IsDebugGrid    bool
+	FPS            time.Duration
 	ScoreService   internal.ScoreService
 	SessionManager internal.SessionManager
 }
@@ -27,12 +31,27 @@ func TickGame() tea.Cmd {
 	}
 }
 
+func DebugGameConfig() GameStartConfig {
+	return GameStartConfig{
+		Rows:           30,
+		Columns:        25,
+		Scoring:        10,
+		IsWalled:       true,
+		IsDebugGrid:    true,
+		ScoreThreshold: 200,
+		FPS:            time.Millisecond * 250,
+		ScoreService:   internal.GetScoreService(),
+		SessionManager: internal.GetSessionManager(),
+	}
+}
+
 func DefaultGameConfig() GameStartConfig {
 	return GameStartConfig{
 		Rows:           30,
 		Columns:        25,
 		Scoring:        10,
 		IsWalled:       true,
+		FPS:            time.Millisecond * 250,
 		ScoreThreshold: 200,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
@@ -47,6 +66,7 @@ func Level1GameConfig() GameStartConfig {
 		Scoring:        10,
 		Pillars:        level1Pillars,
 		Level:          1,
+		FPS:            time.Millisecond * 200,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}
@@ -54,12 +74,14 @@ func Level1GameConfig() GameStartConfig {
 
 func Level2GameConfig() GameStartConfig {
 	return GameStartConfig{
-		Rows:           40,
-		Columns:        30,
+		Rows:           35,
+		Columns:        25,
 		IsWalled:       true,
 		ScoreThreshold: 1900,
 		Scoring:        10,
 		Level:          2,
+		FPS:            time.Millisecond * 200,
+		Pillars:        level2Pillars,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}
@@ -67,11 +89,13 @@ func Level2GameConfig() GameStartConfig {
 
 func Level3GameConfig() GameStartConfig {
 	return GameStartConfig{
-		Rows:           45,
-		Columns:        35,
+		Rows:           35,
+		Columns:        25,
 		ScoreThreshold: 3500,
 		Scoring:        10,
 		Level:          3,
+		FPS:            time.Millisecond * 150,
+		Pillars:        level3Pillars,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}
@@ -79,12 +103,14 @@ func Level3GameConfig() GameStartConfig {
 
 func Level4GameConfig() GameStartConfig {
 	return GameStartConfig{
-		Rows:           50,
-		Columns:        40,
+		Rows:           35,
+		Columns:        25,
 		ScoreThreshold: 5500,
 		IsWalled:       true,
+		Pillars:        level1Pillars,
 		Scoring:        10,
 		Level:          4,
+		FPS:            time.Millisecond * 150,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}
@@ -92,13 +118,15 @@ func Level4GameConfig() GameStartConfig {
 
 func Level5GameConfig() GameStartConfig {
 	return GameStartConfig{
-		Rows:           60,
-		Columns:        40,
+		Rows:           35,
+		Columns:        25,
 		ScoreThreshold: 8000,
-		Scoring:        10,
+		Scoring:        8000,
 		IsWalled:       true,
 		Level:          5,
 		IsFinalLevel:   true,
+		FPS:            time.Millisecond * 150,
+		Pillars:        level3Pillars,
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}

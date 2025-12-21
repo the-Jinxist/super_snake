@@ -43,10 +43,10 @@ func (g *GameCompleted) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // View implements tea.Model.
 func (g *GameCompleted) View() string {
-	gameCompletedMsg := "You are officially a"
-	gameCompletedMsg += "/n"
+	gameCompletedMsg := "\nImpossible! You are officially a"
+	gameCompletedMsg += "\n"
 	gameCompletedMsg += superSnakeMsg
-	gameCompletedMsg += "/n"
+	gameCompletedMsg += "\n"
 	gameCompletedMsg += fmt.Sprintf("Your final score is %d\nPress SPACE to go back to menu", g.Score)
 
 	return gameCompletedMsg

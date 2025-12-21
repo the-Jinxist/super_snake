@@ -163,6 +163,10 @@ func (g *GameModel) instantiateFood() {
 // Update implements tea.Model.
 func (g *GameModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
+	if g.Config.IsDebugGrid {
+		return g, nil
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		input := msg.String()
@@ -234,6 +238,10 @@ func (g *GameModel) hasReachedLevelThreshold() bool {
 
 func (g *GameModel) Tick() tea.Cmd {
 
+	if g.Config.IsDebugGrid {
+		return nil
+	}
+
 	if g.hasReachedLevelThreshold() {
 
 		if g.Config.Level == 5 {
@@ -248,12 +256,17 @@ func (g *GameModel) Tick() tea.Cmd {
 		return tea.Batch(views.SwitchModeCmd(nextLevel))
 	}
 
-	return tea.Tick(time.Second/4, func(t time.Time) tea.Msg {
+	return tea.Tick(g.Config.FPS, func(t time.Time) tea.Msg {
 		return Tick{}
 	})
 }
 
 func (g *GameModel) moveSnake() {
+
+	if g.Config.IsDebugGrid {
+		return
+	}
+
 	pos := g.directionToPosition(g.Direction)
 
 	currentSnakeHead := g.Snake[0]
@@ -339,6 +352,15 @@ func (g *GameModel) View() string {
 	var output string
 	for i := range g.Config.Columns {
 		for j := range g.Config.Rows {
+
+			if g.Config.IsDebugGrid {
+				output += lipgloss.NewStyle().
+					Height(5).
+					Width(5).
+					Border(lipgloss.BlockBorder(), true).
+					Render(fmt.Sprintf("[%d,%d]", j, i))
+				continue
+			}
 
 			if g.isSnake(j, i) {
 				if g.isSnakeHead(j, i) {

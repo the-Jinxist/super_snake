@@ -32,7 +32,7 @@ func NewModel() *SuperSnake {
 func (s *SuperSnake) setChild(mode views.Mode) {
 	switch mode {
 	case views.ModeGame:
-		s.child = game.InitalGameModel(game.DefaultGameConfig())
+		s.child = game.InitalGameModel(game.Level2GameConfig())
 		return
 	case views.ModeLeaderboard:
 		s.child = leaderboard.NewLeaderboardModel(
