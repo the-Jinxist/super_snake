@@ -83,7 +83,9 @@ func (l *Leaderboard) View() string {
 		description += "\n\n"
 	}
 
-	help := "\n\n\nPress [esc] to return back to menu screen"
+	help := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#444745")).
+		Render("\n\n\nPress [esc] to return back to menu screen")
 
 	return title + description + help
 }

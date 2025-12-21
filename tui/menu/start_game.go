@@ -102,13 +102,18 @@ func (m StartGameModel) View() string {
 
 		prefix := ""
 		if index == m.cursor {
-			prefix = "> "
+			prefix = lipgloss.NewStyle().Foreground(lipgloss.Color("#3297a8")).Render("> ")
 		}
 
 		options += style.Render(fmt.Sprintf("\n%s%s", prefix, value))
 	}
 
-	return title + options
+	help := "\n[INSTRUCTIONS]:\n· ↑ or W to move up\n· ↓ or S to move down"
+	help = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#444745")).
+		Render(help)
+
+	return title + options + help
 }
 
 func getHighScore() int {
