@@ -52,7 +52,6 @@ func (s *ScoreServiceImpol) GetHighScore(ctx context.Context) (Score, error) {
 	)
 
 	if err != nil {
-		fmt.Printf("big error: %s", err)
 		if err == sql.ErrNoRows {
 			session, _ := s.Session.GetCurrentSession()
 			return Score{
