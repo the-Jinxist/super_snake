@@ -6,11 +6,7 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
 
-version: 1
-
-env:
-    - GO111MODULE=on
-    - CGO_ENABLED=1
+version: 2
 
 before:
   hooks:
@@ -21,16 +17,11 @@ before:
 
 builds:
   - env:
-      - CGO_ENABLED=1
-      - GO111MODULE=on
-      - CC=o64-clang
-      - CXX=o64-clang++
+      - CGO_ENABLED=0
     goos:
       - linux
       - windows
       - darwin
-    goarch:
-      - amd64  
 
 archives:
   - format: tar.gz
@@ -46,26 +37,6 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
-    name_template: '{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}'
-    replacements:
-        amd64: 64bit
-        386: 32bit
-        arm: ARM
-        arm64: ARM64
-        darwin: macOS
-        linux: Linux
-        windows: Windows
-        openbsd: OpenBSD
-        netbsd: NetBSD
-        freebsd: FreeBSD
-        dragonfly: DragonFlyBSD
-    files:
-        - Readme.MD
-        - LICENSE
-checksum:
-    name_template: 'checksums.txt'
-snapshot:
-    name_template: '{{ .Tag }}-next'
 
 changelog:
   sort: asc
