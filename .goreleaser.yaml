@@ -75,7 +75,6 @@ chocolateys:
   - name: super_snake
     title: "Super Snake"
     authors: "Favour Olukayode"
-    ids: super_snake
     description: "Play Snake Xenzia in your terminal"
     project_url: "https://github.com/the-Jinxist/super_snake"
     url_template: "https://github.com/the-Jinxist/super_snake/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
