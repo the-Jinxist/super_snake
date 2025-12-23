@@ -16,7 +16,9 @@ before:
     - go generate ./...
 
 builds:
-  - env:
+  - id: "super_snake"
+    binary: "super_snake"
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
@@ -56,7 +58,7 @@ brews:
     homepage: "https://github.com/the-Jinxist/golang_snake_game"
     skip_upload: false
     post_install: |
-        golang_snake_game --help
+        super_snake --help
     # tap:
     #   owner: the-Jinxist
     #   name: brew-genie
