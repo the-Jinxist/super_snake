@@ -108,7 +108,7 @@ func (m StartGameModel) View() string {
 		options += style.Render(fmt.Sprintf("\n%s%s", prefix, value))
 	}
 
-	help := "\n[INSTRUCTIONS]:\n· ↑ or W to move up\n· ↓ or S to move down"
+	help := "\n[INSTRUCTIONS]:\n· ↑ or W to move up\n· ↓ or S to move down\n· ENTER to select option"
 	help = lipgloss.NewStyle().
 		Foreground(lipgloss.Color("#444745")).
 		Render(help)
