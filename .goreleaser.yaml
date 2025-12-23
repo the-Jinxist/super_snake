@@ -65,7 +65,7 @@ brews:
       email: nerosilva522@gmail.com
     repository:
       owner: the-Jinxist
-      name: brew-super-snake
+      name: homebrew-super-snake
       branch: main
       token: "{{ .Env.GITHUB_TOKEN }}"
       git:

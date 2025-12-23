@@ -107,6 +107,18 @@ go build -o super_snake
 go run main.go
 ```
 
+### Install via Homebrew
+
+```bash
+brew tap the-Jinxist/homebrew-super-snake
+brew install super_snake
+```
+
+Then run:
+```bash
+super_snake
+```
+
 ---
 
 ## 💻 Usage
