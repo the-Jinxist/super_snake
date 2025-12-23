@@ -70,20 +70,17 @@ brews:
       name: homebrew-super-snake
       branch: main
       token: "{{ .Env.GITHUB_TOKEN }}"
-      git:
-        private_key: '{{ .Env.PRIVATE_KEY_PATH }}'
 
 chocolateys:
   - name: super_snake
-    title: {{ Super Snake }}
-    authors: {{ Favour Olukayode }}}
-    project_url: {{ https://github.com/the-Jinxist/super_snake }}
+    title: "Super Snake"
+    authors: "Favour Olukayode"
+    project_url: "https://github.com/the-Jinxist/super_snake"
     url_template: "https://github.com/the-Jinxist/super_snake/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    copyright: 2024
-    license_url: https://github.com/the-Jinxist/super_snake/blob/main/LICENSE
-    project_source_url: https://github.com/the-Jinxist/super_snake
-    docs_url: {{ Link to Docs }}
-    bug_tracker_url: https://github.com/the-Jinxist/super_snake/issues
+    copyright: "2024"
+    license_url: "https://github.com/the-Jinxist/super_snake/blob/main/LICENSE"
+    project_source_url: "https://github.com/the-Jinxist/super_snake"
+    bug_tracker_url: "https://github.com/the-Jinxist/super_snake/issues"
     release_notes: "https://github.com/the-Jinxist/super_snake/releases/tag/v{{ .Version }}"
     api_key: "{{ .Env.CHOCOLATEY_API_KEY }}"
     source_repo: "https://push.chocolatey.org/"
