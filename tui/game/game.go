@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"math/rand"
+	"math/rand/v2"
 	"strings"
 	"time"
 
@@ -47,10 +47,12 @@ type GameModel struct {
 	IsGameOver    bool
 	IsOutOfBounds bool
 	spinner       spinner.Model
+	rng           *rand.Rand
 	isPaused      bool
 }
 
 func InitalGameModel(gameConfig GameStartConfig) *GameModel {
+	source := rand.NewPCG(uint64(time.Now().Unix()), uint64(time.Now().UnixMicro()))
 
 	s := spinner.New()
 	s.Spinner = spinner.Dot
@@ -67,6 +69,7 @@ func InitalGameModel(gameConfig GameStartConfig) *GameModel {
 				Y: gameConfig.Columns / 2,
 			},
 		},
+		rng:       rand.New(source),
 		Config:    gameConfig,
 		Direction: Right,
 		Score:     currentScore,
@@ -135,7 +138,6 @@ func (g *GameModel) isOutOfBounds(x int, y int) bool {
 
 // Init implements tea.Model.
 func (g *GameModel) Init() tea.Cmd {
-	rand.NewSource(time.Now().UnixNano())
 	g.instantiateFood()
 	return tea.Batch(g.Tick())
 }
@@ -145,12 +147,12 @@ func (g *GameModel) instantiateFood() {
 	rows := g.Config.Rows
 	columns := g.Config.Columns
 
-	randomX := rand.Intn(rows)
-	randomY := rand.Intn(columns)
+	randomX := g.rng.IntN(rows)
+	randomY := g.rng.IntN(columns)
 
 	for g.isSnake(randomX, randomY) || g.isPillar(randomX, randomY) || g.hasHitWall(randomX, randomY) {
-		randomX = rand.Intn(rows)
-		randomY = rand.Intn(columns)
+		randomX = g.rng.IntN(rows)
+		randomY = g.rng.IntN(columns)
 	}
 
 	g.Food = Food{
