@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/Broderick-Westrope/charmutils"
@@ -375,7 +376,7 @@ func (g *GameModel) View() string {
 				}
 
 			} else if g.isFood(j, i) {
-				output += FoodCell
+				output += FoodCell()
 			} else if g.isPillar(j, i) {
 				output += PillarCell
 			} else {
@@ -419,17 +420,35 @@ func (g *GameModel) View() string {
 		output, _ = charmutils.OverlayCenter(output, gameOverMessage, false)
 	}
 
-	levelIndicator := lipgloss.NewStyle().
-		Align(lipgloss.Center).
-		Padding(1).
-		Background(lipgloss.Color("#3297a8")).
-		Render(fmt.Sprintf("Level %d", g.Config.Level))
-	levelIndicator += "\n"
+	levelIndicator := generateLevelIndicator(g.Config.Level)
 
-	help := "\n\n[INSTRUCTIONS]:\n · -> or D to move right\n · <- or A to move left\n · ↑ or W to move up\n · ↓ or S to move down"
+	help := generateHelpString()
 	help = lipgloss.NewStyle().
 		Foreground(lipgloss.Color("#444745")).
 		Render(help)
 
-	return levelIndicator + output + help
+	return levelIndicator + output + "\n" + help
+}
+
+func generateHelpString() string {
+	help := "\n[INSTRUCTIONS]:\n · -> or D to move right\n · <- or A to move left\n · ↑ or W to move up\n · ↓ or S to move down"
+
+	if utils.IsWindowsMachine() {
+		help = strings.ReplaceAll(help, "\n", " | ")
+	}
+
+	return help
+}
+
+func generateLevelIndicator(level int) string {
+	lvlString := fmt.Sprintf("Level %d", level)
+	if !utils.IsWindowsMachine() {
+		lvlString = lipgloss.NewStyle().
+			Align(lipgloss.Center).
+			Padding(1).
+			Background(lipgloss.Color("#3297a8")).
+			Render(lvlString)
+	}
+
+	return lvlString + "\n"
 }

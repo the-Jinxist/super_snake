@@ -52,7 +52,7 @@ func DefaultGameConfig() GameStartConfig {
 		Scoring:        10,
 		IsWalled:       true,
 		FPS:            time.Millisecond * 250,
-		ScoreThreshold: 200,
+		ScoreThreshold: 20, //TODO MUST REMOVE
 		ScoreService:   internal.GetScoreService(),
 		SessionManager: internal.GetSessionManager(),
 	}

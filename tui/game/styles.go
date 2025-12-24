@@ -1,21 +1,39 @@
 package game
 
+import (
+	"github.com/charmbracelet/lipgloss"
+	"github.com/the-Jinxist/golang_snake_game/utils"
+)
+
 const (
-	EmptyCell  = "░░"
-	FilledCell = "██"
-	FoodCell   = "🍎"
+	EmptyCell     = "░░"
+	FilledCell    = "██"
+	FoodCellApple = "🍎"
 
 	SnakeHeadUp    = "◓◓"
 	SnakeHeadDown  = "◒◒"
 	SnakeHeadLeft  = "◐◐"
 	SnakeHeadRight = "◑◑"
 
-	PillarCell = "※※"
+	PillarCell = "  "
 
 	FoodColor = "#DC3A35"
 )
 
+func FoodCell() string {
+	if utils.IsWindowsMachine() {
+		return lipgloss.NewStyle().Foreground(lipgloss.Color(FoodColor)).Render(FilledCell)
+	}
+
+	return FoodCellApple
+}
+
 func SnakeHeadFromDirection(direction Direction) string {
+
+	if utils.IsWindowsMachine() {
+		return FilledCell
+	}
+
 	switch direction {
 	case Up:
 		return SnakeHeadUp
